@@ -157,7 +157,7 @@ spec:
         echo "creating integration server"
         oc apply -f - <<EOF
         apiVersion: appconnect.ibm.com/v1beta1
-        kind: IntegrationServer
+        kind: IntegrationRuntime
         metadata:
           name: $(params.integration-name)
           namespace: $(params.ace-namespace)

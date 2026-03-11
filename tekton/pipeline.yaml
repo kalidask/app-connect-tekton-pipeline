@@ -196,7 +196,7 @@ spec:
     - name: app-connect-enterprise-license
       default: "L-XRNH-47FJAW"
     - name: app-connect-enterprise-base-image
-      default: "cp.icr.io/cp/appc/ace-server-prod@sha256:473bbea96e65025c11c91014ac8dd72641212bd2f5f35d661dca7b3242f4155c"
+      default: "cp.icr.io/cp/appc/ace-server-prod:12.0.12-r21-20260212-151258@sha256:631a411e6142ded373ad31881c932de0ec7a9ed4e78c625d426e9aa0f4703448"
 
     # ########################################################
 

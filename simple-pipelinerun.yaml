@@ -20,7 +20,7 @@ spec:
       value: "hello-world"
     # where to run your application
     - name: ace-namespace
-      value: "ace-demo"
+      value: "integration"
 
     # ########################################################
     # where to find the projects to create

@@ -28,7 +28,7 @@ spec:
     - name: make-output-writable
       image: image-registry.openshift-image-registry.svc:5000/openshift/tools
       script: |
-        #!/bin/bash
+        #!/bin/bin/env bash
 
         set -e
 
@@ -48,12 +48,13 @@ spec:
     - name: run-ace
       # see https://www.ibm.com/docs/en/app-connect/12.0?topic=cacerid-building-sample-app-connect-enterprise-image-using-docker
       #  for alternate images and versions that can be used for this
-      image: cp.icr.io/cp/appc/ace:12.0.6.0-r1@sha256:003ca6615312b0987fca1c09d676a77fc2c77ecc8607dfaa49f2e8e1976a6a15
+      image: cp.icr.io/cp/appc/ace:12.0.12.21-r1@sha256:5a092e0de6b65c7b4b967b32684cb952c5a46757726bdcf57801ca37549e97db
       securityContext:
         # run as the aceuser user id
         runAsUser: 1001
         runAsGroup: 1001
         runAsNonRoot: false
+        fsGroup: 1001
       env:
         - name: LICENSE
           value: accept

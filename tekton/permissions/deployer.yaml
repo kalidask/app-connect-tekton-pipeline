@@ -12,6 +12,7 @@ rules:
     resources:
       - configurations
       - integrationservers
+      - integrationruntimes
     verbs:
       - create
       - patch

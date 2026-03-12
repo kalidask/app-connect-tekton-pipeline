@@ -115,7 +115,7 @@ spec:
             type: dockerfile
             dockerfile: |
               FROM ace-server-prod:latest-amd64
-              COPY integration.bar /home/aceuser/initial-config/generated-bar/integration.bar
+              COPY integration.bar /home/aceuser/initial-config/bars/integration.bar
           strategy:
             type: Docker
             dockerStrategy:

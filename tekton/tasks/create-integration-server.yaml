@@ -162,9 +162,10 @@ spec:
           name: $(params.integration-name)
           namespace: $(params.ace-namespace)
         spec:
-          pod:
-            containers:
-              runtime:
+          template:
+            spec:
+              containers:
+                - name: runtime
                 image: image-registry.openshift-image-registry.svc:5000/$(params.ace-namespace)/$(params.integration-name):$(params.integration-tag)
                 resources:
                   limits:

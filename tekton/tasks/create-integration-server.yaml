@@ -115,7 +115,8 @@ spec:
             type: dockerfile
             dockerfile: |
               FROM ace-server-prod:latest-amd64
-              COPY integration.bar /home/aceuser/ace-server/integration.bar
+              COPY integration.bar /home/aceuser/initial-config/bars/integration.bar
+              RUN ls -lstrha /home/aceuser/initial-config/bars
           strategy:
             type: Docker
             dockerStrategy:
@@ -134,8 +135,10 @@ spec:
 
         echo "starting custom image build"
         cd $(params.bar-file-location)
-        ls -l
-        oc start-build $(params.integration-name) -n $(params.ace-namespace) --from-file ./integration.bar --wait=true
+        pwd
+        ls -lstrha
+        oc start-build $(params.integration-name) -n $(params.ace-namespace) --from-file=integration.bar --wait=true
+        echo ""
 
         echo "preparing configuration list"
         if [ -n "$(params.policies-configuration)" ]; then
@@ -154,26 +157,38 @@ spec:
           TRUSTSTORE_CONFIG="- $(params.truststore-configuration)"
         fi
 
-        echo "creating integration server"
+
+
+        echo ""
+
+        echo "creating integration runtime"
         oc apply -f - <<EOF
         apiVersion: appconnect.ibm.com/v1beta1
         kind: IntegrationRuntime
         metadata:
           name: $(params.integration-name)
           namespace: $(params.ace-namespace)
+          annotations:
+            appconnect.ibm.com/updating: 'false'
+          labels:
+            appconnect.ibm.com/designerapiflow: 'false'
+            appconnect.ibm.com/designereventflow: 'false'
+            appconnect.ibm.com/toolkitflow: 'true'
+            backup.appconnect.ibm.com/component: integrationruntime
         spec:
           template:
             spec:
               containers:
                 - name: runtime
-                image: image-registry.openshift-image-registry.svc:5000/$(params.ace-namespace)/$(params.integration-name):$(params.integration-tag)
-                resources:
-                  limits:
-                    cpu: $(params.cpu-limit)
-                    memory: $(params.memory-limit)
-                  requests:
-                    cpu: $(params.cpu-limit)
-                    memory: $(params.memory-limit)
+                  image: image-registry.openshift-image-registry.svc:5000/$(params.ace-namespace)/$(params.integration-name):$(params.integration-tag)
+                  imagePullPolicy: Always
+                  resources:
+                    limits:
+                      cpu: $(params.cpu-limit)
+                      memory: $(params.memory-limit)
+                    requests:
+                      cpu: $(params.cpu-limit)
+                      memory: $(params.memory-limit)
           configurations:
             $POLICIES_CONFIG
             $SETDBPARMS_CONFIG
@@ -182,7 +197,8 @@ spec:
             $TRUSTSTORE_CONFIG
           adminServerSecure: true
           createDashboardUsers: true
-          designerFlowsOperationMode: disabled
+          flowType:
+            designerAPIFlow: true
           service:
             endpointType: http
           version: '$(params.ace-server-version)'
